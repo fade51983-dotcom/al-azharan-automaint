@@ -1,0 +1,22 @@
+{
+  "functions": {
+    "api/track.js": {
+      "runtime": "edge",
+      "maxDuration": 10
+    }
+  },
+  "redirects": [
+    { "source": "/pixel", "destination": "/api/track", "permanent": false },
+    { "source": "/track.gif", "destination": "/api/track", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "*" }
+      ]
+    }
+  ]
+}
