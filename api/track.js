@@ -58,8 +58,8 @@ export default async function handler(req, ctx) {
     });
   }
 
-  // إرسال إشعار تيليجرام — نستخدم ctx.waitUntil عشان الخلفية تكمل حتى لو رجعنا الرد
-  ctx.waitUntil(sendTelegramNotification({ ip, ua, referrer, country, city, region }));
+  // إرسال إشعار تيليجرام مباشر (متزامن)
+  await sendTelegramNotification({ ip, ua, referrer, country, city, region });
 
   // إعادة الـ GIF الشفاف (بدون انتظار)
   return new Response(TRANSPARENT_GIF, {
