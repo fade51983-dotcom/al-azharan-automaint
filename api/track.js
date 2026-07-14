@@ -1,5 +1,5 @@
 // Vercel Edge Function — Tracking Pixel لكراج الأزهران
-// يُستخدم كـ 1×1 transparent GIF + إرسال إشعار تيليجرام
+// 1x1 transparent GIF + إرسال إشعار تيليجرام
 
 const TRANSPARENT_GIF = Uint8Array.from([
   0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00,
@@ -9,14 +9,11 @@ const TRANSPARENT_GIF = Uint8Array.from([
   0x01, 0x00, 0x3b,
 ]);
 
-export const config = {
-  runtime: 'edge',
-};
+export const config = { runtime: 'edge' };
 
-export default async function handler(req) {
+export default async function handler(req, ctx) {
   const url = new URL(req.url);
 
-  // CORS HEADERS
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
@@ -52,11 +49,10 @@ export default async function handler(req) {
     });
   }
 
-  // إرسال إشعار تيليجرام (في الخلفية)
-  sendTelegramNotification({ ip, ua, referrer, country, city, region, url: url.toString() })
-    .catch(() => {}); // تجاهل أخطاء الإرسال
+  // إرسال إشعار تيليجرام — نستخدم ctx.waitUntil عشان الخلفية تكمل حتى لو رجعنا الرد
+  ctx.waitUntil(sendTelegramNotification({ ip, ua, referrer, country, city, region }));
 
-  // إعادة الـ GIF الشفاف
+  // إعادة الـ GIF الشفاف (بدون انتظار)
   return new Response(TRANSPARENT_GIF, {
     status: 200,
     headers: {
@@ -74,32 +70,38 @@ async function sendTelegramNotification(data) {
 
   if (!botToken || !chatId) return;
 
-  const { ip, ua, referrer, country, city, region, url } = data;
+  const { ip, ua, referrer, country, city, region } = data;
 
-  const visitTime = new Date().toLocaleString('ar-AE', { timeZone: 'Asia/Dubai' });
-  const locationInfo = [country, city, region].filter(Boolean).join('، ');
-  const pageTitle = referrer && referrer !== 'زيارة مباشرة'
-    ? referrer.replace(/https?:\/\/[^\/]+/, '')
+  const now = new Date();
+  const visitTime = now.toISOString().replace('T', ' ').substring(0, 19) + ' +04';
+
+  const loc = [country, city, region].filter(Boolean).join('، ');
+  const page = referrer && referrer !== 'زيارة مباشرة'
+    ? referrer.replace(/https?:\/\/[^\/]+/, '') || '/'
     : 'الصفحة الرئيسية';
 
-  let message = `👤 <b>زيارة جديدة</b>\n`;
-  message += `🕐 ${visitTime}\n`;
-  message += `🌐 <code>${ip}</code>\n`;
-  if (locationInfo) message += `📍 ${locationInfo}\n`;
-  message += `📄 ${pageTitle}\n`;
-  message += `🔗 ${referrer !== 'زيارة مباشرة' ? referrer : '• مباشر'}\n`;
-  message += `📱 <code>${(ua || '').substring(0, 120)}</code>`;
+  const text = [
+    `👤 <b>زيارة جديدة</b>`,
+    `🕐 ${visitTime}`,
+    `🌐 <code>${ip}</code>`,
+    loc && `📍 ${loc}`,
+    `📄 ${page}`,
+    `🔗 ${referrer && referrer !== 'زيارة مباشرة' ? referrer : '• مباشر'}`,
+    `📱 <code>${(ua || '').substring(0, 120)}</code>`,
+  ].filter(Boolean).join('\n');
 
-  const tgUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-  await fetch(tgUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: message,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-    }),
-  });
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+      }),
+    });
+  } catch (_) {
+    // صامت — الفشل لا يمنع الـ GIF
+  }
 }
