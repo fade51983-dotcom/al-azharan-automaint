@@ -1,7 +1,6 @@
 {
   "functions": {
     "api/track.js": {
-      "runtime": "edge",
       "maxDuration": 10
     }
   },
