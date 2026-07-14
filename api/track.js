@@ -49,6 +49,15 @@ export default async function handler(req, ctx) {
     });
   }
 
+  // وضع التصحيح — ?debug=1 يرجع JSON عشان نشوف التفاصيل
+  if (url.searchParams.has('debug')) {
+    const debugInfo = await debugTelegram({ ip, ua, referrer, country, city, region });
+    return new Response(JSON.stringify(debugInfo, null, 2), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    });
+  }
+
   // إرسال إشعار تيليجرام — نستخدم ctx.waitUntil عشان الخلفية تكمل حتى لو رجعنا الرد
   ctx.waitUntil(sendTelegramNotification({ ip, ua, referrer, country, city, region }));
 
@@ -104,4 +113,58 @@ async function sendTelegramNotification(data) {
   } catch (_) {
     // صامت — الفشل لا يمنع الـ GIF
   }
+}
+
+// دالة تصحيح — ترجع حالة الإعدادات بدون إرسال إشعار
+async function debugTelegram(data) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  const info = {
+    env: {
+      hasToken: !!botToken,
+      hasChatId: !!chatId,
+      tokenPrefix: botToken ? botToken.substring(0, 18) + '...' : 'N/A',
+      chatId: chatId || 'N/A',
+    },
+    request: {
+      ip: data.ip,
+      ua: data.ua.substring(0, 80),
+      referrer: data.referrer,
+      country: data.country,
+      city: data.city,
+    },
+  };
+
+  // اختبر اتصال التيليجرام
+  if (botToken) {
+    try {
+      const resp = await fetch(`https://api.telegram.org/bot${botToken}/getMe`, { method: 'GET' });
+      const json = await resp.json();
+      info.telegram_getme = { ok: json.ok, bot: json.ok ? json.result.username : null, error: json.ok ? null : json.description };
+    } catch (e) {
+      info.telegram_getme = { ok: false, error: e.message };
+    }
+
+    // اختبر إرسال رسالة
+    try {
+      const now = new Date().toISOString();
+      const resp = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId || '7304090625',
+          text: `🧪 <b>اختبار التتبع</b>\n✅ النظام شغال — ${now}`,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        }),
+      });
+      const json = await resp.json();
+      info.telegram_send = { ok: json.ok, error: json.ok ? null : json.description, code: resp.status };
+    } catch (e) {
+      info.telegram_send = { ok: false, error: e.message };
+    }
+  }
+
+  return info;
 }
