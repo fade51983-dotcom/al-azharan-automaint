@@ -237,8 +237,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </main>
 
-<!-- Tracking Pixel لكراج الأزهران -->
-<img src="https://al-azharan-automaint-ten.vercel.app/api/track" alt="" width="1" height="1" style="position:absolute;left:-9999px" referrerpolicy="unsafe-url" />
+<!-- تتبع الزيارة ونقرات الاتصال وواتساب عبر Relay آمن -->
+<script>
+  (function () {
+    const endpoint = 'https://al-azharan-automaint-ten.vercel.app/api/track';
+
+    function notify(event, label) {
+      const params = new URLSearchParams({
+        ev: event,
+        page: window.location.href,
+        label: label || '',
+        _: Date.now().toString()
+      });
+      const url = endpoint + '?' + params.toString();
+
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([], { type: 'text/plain' }));
+      } else {
+        fetch(url, { method: 'POST', mode: 'no-cors', keepalive: true }).catch(function () {});
+      }
+    }
+
+    window.addEventListener('load', function () {
+      setTimeout(function () { notify('pageview', 'صفحة اتصالات وبس'); }, 700);
+    });
+
+    document.addEventListener('click', function (event) {
+      const link = event.target.closest('a');
+      if (!link) return;
+      const href = link.getAttribute('href') || '';
+      if (href.indexOf('tel:') === 0) {
+        notify('call', (link.textContent || 'اتصل الآن').trim().slice(0, 60));
+      } else if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
+        notify('whatsapp', (link.textContent || 'واتساب').trim().slice(0, 60));
+      }
+    }, true);
+  })();
+</script>
 
 <!-- Microsoft Clarity -->
 <script type="text/javascript">

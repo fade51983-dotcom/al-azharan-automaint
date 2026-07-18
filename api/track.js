@@ -16,7 +16,7 @@ export default async function handler(req, ctx) {
 
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   };
 
   if (req.method === 'OPTIONS') {
@@ -34,6 +34,9 @@ export default async function handler(req, ctx) {
   const country = req.headers.get('x-vercel-ip-country') || '';
   const city = req.headers.get('x-vercel-ip-city') || '';
   const region = req.headers.get('x-vercel-ip-country-region') || '';
+  const event = url.searchParams.get('ev') || 'pageview';
+  const pageUrl = url.searchParams.get('page') || referrer;
+  const label = url.searchParams.get('label') || '';
 
   // تجاهل البوتات والفحوصات
   const isBot = /bot|crawl|spider|preview|health|ping|vercel/i.test(ua);
@@ -59,7 +62,7 @@ export default async function handler(req, ctx) {
   }
 
   // إرسال إشعار تيليجرام مباشر (متزامن)
-  await sendTelegramNotification({ ip, ua, referrer, country, city, region });
+  await sendTelegramNotification({ ip, ua, referrer, country, city, region, event, pageUrl, label });
 
   // إعادة الـ GIF الشفاف (بدون انتظار)
   return new Response(TRANSPARENT_GIF, {
@@ -79,28 +82,34 @@ async function sendTelegramNotification(data) {
 
   if (!botToken || !chatId) return;
 
-  const { ip, ua, referrer, country, city, region } = data;
-
+  const { ip, ua, referrer, country, city, region, event, pageUrl, label } = data;
   const now = new Date();
   const visitTime = now.toISOString().replace('T', ' ').substring(0, 19) + ' +04';
-
   const loc = [country, city, region].filter(Boolean).join('، ');
-  const page = referrer && referrer !== 'زيارة مباشرة'
-    ? referrer.replace(/https?:\/\/[^\/]+/, '') || '/'
+  const eventTitle = event === 'call'
+    ? '📞 نقرة اتصال جديدة'
+    : event === 'whatsapp'
+      ? '💬 نقرة واتساب جديدة'
+      : '👤 زيارة جديدة';
+  const safePageUrl = pageUrl && pageUrl !== 'زيارة مباشرة' ? pageUrl : 'زيارة مباشرة';
+  const page = safePageUrl !== 'زيارة مباشرة'
+    ? safePageUrl.replace(/https?:\/\/[^\/]+/, '') || '/'
     : 'الصفحة الرئيسية';
 
   const text = [
-    `👤 <b>زيارة جديدة</b>`,
+    `<b>${eventTitle}</b>`,
     `🕐 ${visitTime}`,
-    `🌐 <code>${ip}</code>`,
-    loc && `📍 ${loc}`,
-    `📄 ${page}`,
-    `🔗 ${referrer && referrer !== 'زيارة مباشرة' ? referrer : '• مباشر'}`,
-    `📱 <code>${(ua || '').substring(0, 120)}</code>`,
+    `🌐 <code>${escapeHtml(ip)}</code>`,
+    loc && `📍 ${escapeHtml(loc)}`,
+    `📄 ${escapeHtml(page)}`,
+    label && `🎯 ${escapeHtml(label)}`,
+    `🔗 ${escapeHtml(safePageUrl)}`,
+    `↩️ ${escapeHtml(referrer && referrer !== 'زيارة مباشرة' ? referrer : '• مباشر')}`,
+    `📱 <code>${escapeHtml((ua || '').substring(0, 120))}</code>`,
   ].filter(Boolean).join('\n');
 
   try {
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -110,9 +119,20 @@ async function sendTelegramNotification(data) {
         disable_web_page_preview: true,
       }),
     });
-  } catch (_) {
-    // صامت — الفشل لا يمنع الـ GIF
+    if (!response.ok) {
+      console.error('Telegram send failed:', response.status, await response.text());
+    }
+  } catch (error) {
+    console.error('Telegram request failed:', error);
   }
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 // دالة تصحيح — ترجع حالة الإعدادات بدون إرسال إشعار
