@@ -17,6 +17,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-K6HWSCN9');</script>
 <!-- End Google Tag Manager -->
+<!-- Google tag — تحويلات الاتصال وواتساب لحملة اتصالات وبس -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-5MJLP2J4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GT-5MJLP2J4');
+</script>
 <style>
   :root{
     --bg:#0a0b0d;
@@ -268,8 +276,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const href = link.getAttribute('href') || '';
       if (href.indexOf('tel:') === 0) {
         notify('call', (link.textContent || 'اتصل الآن').trim().slice(0, 60));
+        if (typeof gtag === 'function') {
+          gtag('event', 'conversion', {
+            send_to: 'AW-17662127398/RTguCNucztIcEKba-uVB',
+            value: 1.0,
+            currency: 'AED'
+          });
+          gtag('event', 'tel', { link_url: href, page_location: window.location.href });
+        }
       } else if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
         notify('whatsapp', (link.textContent || 'واتساب').trim().slice(0, 60));
+        if (typeof gtag === 'function') {
+          gtag('event', 'conversion', {
+            send_to: 'AW-17662127398/y2vKCOerztIcEKba-uVB',
+            value: 1.0,
+            currency: 'AED'
+          });
+          gtag('event', 'WhatsApp', { link_url: href, page_location: window.location.href });
+        }
       }
     }, true);
   })();
