@@ -196,7 +196,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <span class="kicker rv rv-d1"><span class="dot"></span> متاحون الآن — الشارقة الصناعية 4 &nbsp;|&nbsp; استلام من دبي</span>
 
-  <h1 class="rv rv-d1">كراج تصليح وصيانة<br><span class="hl">بنتلي</span></h1>
+  <h1 class="rv rv-d1" id="dki-h1" data-default="كراج تصليح وصيانة|بنتلي">كراج تصليح وصيانة<br><span class="hl">بنتلي</span></h1>
 
   <p class="sub rv rv-d2">
     متخصصون في بنتلي — كونتيننتال، بنتايجا و فلاينج سبير. فحص كمبيوتر، كهرباء وبرمجة، ميكانيكا وجير
@@ -229,6 +229,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="foot rv rv-d4">كراج الأزهران — الشارقة، المنطقة الصناعية 4 &nbsp;|&nbsp; <bdi>+971 55 869 8543</bdi></p>
 
 </main>
+
+<!-- DKI — إدراج الكلمة المفتاحية ديناميكياً في العنوان -->
+<script>
+  (function () {
+    try {
+      var p = new URLSearchParams(window.location.search);
+      var kw = p.get('kw') || p.get('keyword') || '';
+      kw = decodeURIComponent(kw).replace(/\+/g, ' ').trim();
+      if (!kw || !/^[\u0600-\u06FF\u0750-\u077FA-Za-z0-9 ]{2,40}$/.test(kw)) return;
+      var el = document.getElementById('dki-h1');
+      if (!el) return;
+      var words = kw.split(/\s+/);
+      var last = words.pop();
+      var head = words.join(' ');
+      el.innerHTML = (head ? head + '<br>' : '') + '<span class="hl">' + last + '</span>';
+    } catch (e) {}
+  })();
+</script>
 
 <!-- تتبع الزيارة ونقرات الاتصال وواتساب عبر Relay آمن -->
 <script>
