@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>اتصل الآن — كراج تصليح وصيانة أودي وبنتلي وبورش | كراج الأزهران</title>
-<meta name="description" content="كراج تصليح وصيانة أودي وبنتلي وبورش في الشارقة مع استلام وتسليم من دبي. اتصل الآن 0558698543 — فحص كمبيوتر، كهرباء، ميكانيكا، جير، وضمان على الإصلاح.">
+<title id="page-title">اتصل الآن — كراج تصليح وصيانة أودي وبنتلي وبورش | كراج الأزهران</title>
+<meta name="description" content="كراج تصليح وصيانة أودي وبنتلي وبورش في الشارقة مع استلام وتسليم من دبي. اتصل الآن 0558698543">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,8 +16,7 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-K6HWSCN9');</script>
-<!-- End Google Tag Manager -->
-<!-- Google tag — تحويلات الاتصال وواتساب لحملة اتصالات وبس -->
+<!-- Google tag -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GT-5MJLP2J4"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -55,14 +54,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       linear-gradient(180deg,rgba(10,11,13,.93) 0%,rgba(10,11,13,.82) 45%,rgba(10,11,13,.94) 100%),
       url('/assets/porsche-gt3rs-sunset.jpg') center 60%/cover no-repeat var(--bg);
   }
-  /* carbon texture */
   body::before{
     content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
       repeating-linear-gradient(45deg,rgba(255,255,255,.014) 0 2px,transparent 2px 6px),
       repeating-linear-gradient(-45deg,rgba(255,255,255,.014) 0 2px,transparent 2px 6px);
   }
-  /* racing stripe */
   .stripe{
     flex:none;height:5px;position:relative;z-index:2;
     background:linear-gradient(90deg,var(--red) 0 30%,transparent 30% 34%,var(--red) 34% 40%,transparent 40%);
@@ -70,6 +67,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   ::selection{background:var(--red);color:#fff}
   a{color:inherit;text-decoration:none}
   img,svg{display:block;max-width:100%}
+
+  /* Lang toggle */
+  .lang-toggle{
+    position:fixed;top:clamp(10px,2svh,16px);right:clamp(10px,2vw,20px);z-index:10;
+    display:flex;gap:2px;
+    background:rgba(255,255,255,.08);border-radius:10px;padding:3px;
+    backdrop-filter:blur(8px);
+  }
+  .lang-toggle a{
+    font-family:var(--font-body);font-size:.72rem;font-weight:600;
+    padding:5px 11px;border-radius:8px;color:var(--muted);
+    transition:all .2s;
+  }
+  .lang-toggle a.active{
+    background:var(--red);color:#fff;
+  }
+  html[dir="ltr"] .lang-toggle{right:auto;left:clamp(10px,2vw,20px)}
 
   .page{
     position:relative;z-index:1;flex:1;min-height:0;
@@ -80,7 +94,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     gap:clamp(2px,.8svh,12px);
   }
 
-  /* ── brand row ── */
   .brand{display:flex;align-items:center;gap:11px}
   .brand-mark{
     width:clamp(38px,5.4svh,46px);height:clamp(38px,5.4svh,46px);flex:none;border-radius:10px;
@@ -92,7 +105,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .brand-name{font-family:var(--font-display);font-weight:800;font-size:clamp(.95rem,2svh,1.1rem);text-align:start}
   .brand-name small{display:block;font-family:var(--font-body);font-weight:400;font-size:.66rem;color:var(--muted);letter-spacing:1px}
 
-  /* ── kicker ── */
   .kicker{
     display:inline-flex;align-items:center;gap:9px;
     border:1px solid rgba(213,0,28,.55);border-radius:999px;
@@ -102,7 +114,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .kicker .dot{width:8px;height:8px;border-radius:50%;background:var(--red-hot);box-shadow:0 0 12px var(--red-hot);animation:pulse 1.6s infinite}
   @keyframes pulse{50%{opacity:.35}}
 
-  /* ── headline ── */
   h1{
     font-family:var(--font-display);font-weight:900;line-height:1.3;
     font-size:clamp(1.5rem,4.6svh,2.6rem);
@@ -116,7 +127,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .sub strong{color:var(--silver);font-weight:600}
 
-  /* ── brand logos ── */
   .logos{display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,1svh,10px);width:100%;max-width:480px}
   .logo-card{
     background:linear-gradient(165deg,#f6f7f9 0%,#dfe3e9 100%);
@@ -129,7 +139,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .logo-card.porsche{grid-column:1/-1;flex-direction:row;justify-content:center;gap:12px;padding-block:clamp(7px,1.4svh,12px)}
   .logo-card.porsche img{width:min(58%,210px);height:clamp(12px,2.2svh,17px)}
 
-  /* ── phone + CTA ── */
   .call-zone{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2svh,12px)}
   .big-phone{
     font-family:var(--font-display);font-weight:900;
@@ -152,7 +161,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .btn-call:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(213,0,28,.65)}
   .btn-call svg{width:clamp(20px,2.6svh,24px);height:clamp(20px,2.6svh,24px)}
-  /* pulsing ring to draw the eye */
   .btn-call::after{
     content:"";position:absolute;inset:0;border-radius:inherit;
     box-shadow:0 0 0 0 rgba(255,33,54,.55);
@@ -168,7 +176,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .btn-wa:hover{background:rgba(31,191,95,.22);transform:translateY(-2px)}
   .btn-wa svg{width:19px;height:19px}
 
-  /* ── trust row ── */
   .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:6px clamp(12px,2svh,22px)}
   .trust-item{display:flex;align-items:center;gap:7px;font-size:clamp(.7rem,1.6svh,.84rem);color:var(--silver);white-space:nowrap}
   .trust-item svg{width:15px;height:15px;color:var(--red-hot);flex:none}
@@ -176,12 +183,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .foot{font-size:clamp(.62rem,1.4svh,.74rem);color:#7c8490}
   .foot bdi{letter-spacing:.5px}
 
-  /* entrance reveals */
   .rv{opacity:0;transform:translateY(18px);animation:in .7s cubic-bezier(.2,.7,.3,1) forwards}
   .rv-d1{animation-delay:.08s}.rv-d2{animation-delay:.16s}.rv-d3{animation-delay:.24s}.rv-d4{animation-delay:.32s}
   @keyframes in{to{opacity:1;transform:none}}
 
-  /* very short screens (landscape phones): drop non-essentials */
   @media(max-height:480px){
     .sub,.trust-row,.foot{display:none}
     .logos{max-width:420px}
@@ -191,73 +196,138 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     *,*::before,*::after{animation:none!important;transition:none!important}
     .rv{opacity:1;transform:none}
   }
+
+  /* Bilingual: show/hide by language */
+  .ar{display:block}
+  .en{display:none}
+  html[lang="en"][dir="ltr"] .ar{display:none}
+  html[lang="en"][dir="ltr"] .en{display:block}
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6HWSCN9"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+
+<div class="lang-toggle">
+  <a href="?lang=ar" class="ar-hl active">AR</a>
+  <a href="?lang=en" class="en-hl">EN</a>
+</div>
 
 <div class="stripe"></div>
 
 <main class="page">
 
   <div class="brand rv">
-    <div class="brand-mark">أ</div>
-    <div class="brand-name">كراج الأزهران<small>أودي • بنتلي • بورش</small></div>
+    <div class="brand-mark ar">أ</div>
+    <div class="brand-mark en">A</div>
+    <div class="brand-name">
+      <span class="ar">كراج الأزهران</span>
+      <span class="en">Al Azharan Garage</span>
+      <small>Audi • Bentley • Porsche</small>
+    </div>
   </div>
 
-  <span class="kicker rv rv-d1"><span class="dot"></span> متاحون الآن — الشارقة الصناعية 4 &nbsp;|&nbsp; استلام من دبي</span>
+  <span class="kicker rv rv-d1">
+    <span class="dot"></span>
+    <span class="ar">متاحون الآن — الشارقة الصناعية 4 &nbsp;|&nbsp; استلام من دبي</span>
+    <span class="en">Available Now — Sharjah Ind. 4 &nbsp;|&nbsp; Pickup from Dubai</span>
+  </span>
 
-  <h1 class="rv rv-d1">كراج تصليح وصيانة<br><span class="hl">أودي وبنتلي وبورش</span></h1>
+  <h1 class="rv rv-d1">
+    <span class="ar">كراج تصليح وصيانة<br><span class="hl">أودي وبنتلي وبورش</span></span>
+    <span class="en">Porsche, Audi & Bentley<br><span class="hl">Repair & Service Center</span></span>
+  </h1>
 
   <p class="sub rv rv-d2">
-    فحص كمبيوتر، كهرباء وبرمجة، ميكانيكا وجير — <strong>بضمان وبأسعار أقل من الوكالة</strong>،
-    مع خدمة استلام وتسليم بالسطحة من دبي والشارقة.
+    <span class="ar">فحص كمبيوتر، كهرباء وبرمجة، ميكانيكا وجير — <strong>بضمان وبأسعار أقل من الوكالة</strong>، مع خدمة استلام وتسليم بالسطحة من دبي والشارقة.</span>
+    <span class="en">Computer diagnostics, electrical & programming, engine & transmission — <strong>warranty on all repairs at lower prices than the dealer</strong>. Free pickup & delivery from Dubai & Sharjah.</span>
   </p>
 
   <div class="logos rv rv-d2">
-    <div class="logo-card"><img src="/assets/logo-audi.png" alt="أودي Audi" width="960" height="339"><span>أودي</span></div>
-    <div class="logo-card"><img src="/assets/logo-bentley.png" alt="بنتلي Bentley" width="960" height="300"><span>بنتلي</span></div>
-    <div class="logo-card porsche"><img src="/assets/logo-porsche.png" alt="بورش Porsche" width="960" height="64"><span>بورش</span></div>
+    <div class="logo-card"><img src="/assets/logo-audi.png" alt="Audi" width="960" height="339"><span>Audi</span></div>
+    <div class="logo-card"><img src="/assets/logo-bentley.png" alt="Bentley" width="960" height="300"><span>Bentley</span></div>
+    <div class="logo-card porsche"><img src="/assets/logo-porsche.png" alt="Porsche" width="960" height="64"><span>Porsche</span></div>
   </div>
 
   <div class="call-zone rv rv-d3">
     <div class="big-phone">055 869 8543</div>
     <a class="btn btn-call" id="call-btn" href="tel:+971558698543">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
-      اتصل الآن — استشارة مجانية
+      <span class="ar">اتصل الآن — استشارة مجانية</span>
+      <span class="en">Call Now — Free Consultation</span>
     </a>
-    <a class="btn btn-wa" id="wa-btn" href="https://wa.me/971558698543?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%8A%D8%A7%D8%B1%D8%AA%D9%8A" target="_blank" rel="noopener">
+    <a class="btn btn-wa" id="wa-btn" href="https://wa.me/971558698543?text=Hello%2C%20I%20would%20like%20to%20book%20a%20service%20appointment" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.2.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
-      أو راسلنا واتساب
+      <span class="ar">أو راسلنا واتساب</span>
+      <span class="en">Message Us on WhatsApp</span>
     </a>
   </div>
 
   <div class="trust-row rv rv-d4">
-    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 5v6c0 5.5 3.4 10.3 8 11 4.6-.7 8-5.5 8-11V5l-8-3zm-1.2 14.5-3.3-3.3 1.4-1.4 1.9 1.9 4.3-4.3 1.4 1.4-5.7 5.7z"/></svg> ضمان على الإصلاحات</span>
-    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3v2H4v14h16V5h-5V3H9zm3 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg> أجهزة فحص متخصصة</span>
-    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3v12h2a3 3 0 0 0 6 0h4a3 3 0 0 0 6 0h2v-5l-3-3zM8 17.5A1.5 1.5 0 1 1 9.5 16 1.5 1.5 0 0 1 8 17.5zm10 0A1.5 1.5 0 1 1 19.5 16 1.5 1.5 0 0 1 18 17.5zM17 11V9.5h2.5l1.5 1.5h-4z"/></svg> استلام وتسليم من دبي</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 5v6c0 5.5 3.4 10.3 8 11 4.6-.7 8-5.5 8-11V5l-8-3zm-1.2 14.5-3.3-3.3 1.4-1.4 1.9 1.9 4.3-4.3 1.4 1.4-5.7 5.7z"/></svg> <span class="ar">ضمان على الإصلاحات</span><span class="en">Warranty on All Repairs</span></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3v2H4v14h16V5h-5V3H9zm3 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg> <span class="ar">أجهزة فحص متخصصة</span><span class="en">Specialized Diagnostic Tools</span></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3v12h2a3 3 0 0 0 6 0h4a3 3 0 0 0 6 0h2v-5l-3-3zM8 17.5A1.5 1.5 0 1 1 9.5 16 1.5 1.5 0 0 1 8 17.5zm10 0A1.5 1.5 0 1 1 19.5 16 1.5 1.5 0 0 1 18 17.5zM17 11V9.5h2.5l1.5 1.5h-4z"/></svg> <span class="ar">استلام وتسليم من دبي</span><span class="en">Pickup & Delivery Dubai</span></span>
   </div>
 
-  <p class="foot rv rv-d4">كراج الأزهران — الشارقة، المنطقة الصناعية 4 &nbsp;|&nbsp; <bdi>+971 55 869 8543</bdi></p>
+  <p class="foot rv rv-d4">
+    <span class="ar">كراج الأزهران — الشارقة، المنطقة الصناعية 4 &nbsp;|&nbsp;</span>
+    <span class="en">Al Azharan Garage — Sharjah, Industrial Area 4 &nbsp;|&nbsp;</span>
+    <bdi>+971 55 869 8543</bdi>
+  </p>
 
 </main>
 
-<!-- تتبع الزيارة ونقرات الاتصال وواتساب عبر Relay آمن -->
+<!-- Language detection & switching -->
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var lang = params.get('lang');
+  var html = document.getElementById('html-root');
+  var arLink = document.querySelector('.lang-toggle a[href="?lang=ar"]');
+  var enLink = document.querySelector('.lang-toggle a[href="?lang=en"]');
+
+  function setLang(l) {
+    html.setAttribute('lang', l);
+    html.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+    document.getElementById('page-title').textContent = l === 'ar'
+      ? 'اتصل الآن — كراج تصليح وصيانة أودي وبنتلي وبورش | كراج الأزهران'
+      : 'Call Now — Porsche, Audi & Bentley Repair & Service | Al Azharan Garage';
+    arLink.classList.toggle('active', l === 'ar');
+    enLink.classList.toggle('active', l === 'en');
+  }
+
+  if (lang === 'en') {
+    setLang('en');
+  } else if (lang === 'ar') {
+    setLang('ar');
+  } else {
+    // Default: Arabic
+    setLang('ar');
+  }
+
+  // Update WhatsApp link based on language
+  var waBtn = document.getElementById('wa-btn');
+  if (lang === 'en') {
+    waBtn.href = 'https://wa.me/971558698543?text=Hello%2C%20I%20would%20like%20to%20book%20a%20service%20appointment';
+  } else {
+    waBtn.href = 'https://wa.me/971558698543?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%85%D9%88%D8%B9%D8%AF%20%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%8A%D8%A7%D8%B1%D8%AA%D9%8A';
+  }
+})();
+</script>
+
+<!-- Tracking -->
 <script>
   (function () {
-    const endpoint = 'https://al-azharan-automaint-ten.vercel.app/api/track';
+    var endpoint = 'https://al-azharan-automaint-ten.vercel.app/api/track';
 
     function notify(event, label) {
-      const params = new URLSearchParams({
+      var params = new URLSearchParams({
         ev: event,
         page: window.location.href,
         label: label || '',
         _: Date.now().toString()
       });
-      const url = endpoint + '?' + params.toString();
+      var url = endpoint + '?' + params.toString();
 
       if (navigator.sendBeacon) {
         navigator.sendBeacon(url, new Blob([], { type: 'text/plain' }));
@@ -271,9 +341,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
 
     document.addEventListener('click', function (event) {
-      const link = event.target.closest('a');
+      var link = event.target.closest('a');
       if (!link) return;
-      const href = link.getAttribute('href') || '';
+      var href = link.getAttribute('href') || '';
       if (href.indexOf('tel:') === 0) {
         notify('call', (link.textContent || 'اتصل الآن').trim().slice(0, 60));
         if (typeof gtag === 'function') {
