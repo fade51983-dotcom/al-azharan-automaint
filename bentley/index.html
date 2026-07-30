@@ -46,8 +46,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-family:var(--font-body);
     background:var(--bg);
     color:var(--text);
-    height:100svh;
-    overflow:hidden;
+    min-height:100svh;
+    overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
     display:flex;flex-direction:column;
     background:
@@ -70,7 +70,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   img,svg{display:block;max-width:100%}
 
   .page{
-    position:relative;z-index:1;flex:1;min-height:0;
+    position:relative;z-index:1;flex:none;min-height:100svh;
     width:min(680px,92%);margin-inline:auto;
     display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;
     text-align:center;
@@ -164,6 +164,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   .foot{font-size:clamp(.62rem,1.4svh,.74rem);color:#7c8b80}
   .foot bdi{letter-spacing:.5px}
+  .service-details{position:relative;z-index:1;background:#0c1510;border-top:1px solid var(--line);padding:52px 20px 56px;text-align:right}
+  .service-details-inner{width:min(680px,92%);margin:auto}
+  .service-details h2{font-family:var(--font-display);font-size:clamp(1.35rem,4vw,1.8rem);line-height:1.55;margin-bottom:14px}
+  .service-details p{color:var(--muted);line-height:2;font-size:.96rem;margin-bottom:16px}
+  .service-details ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;list-style:none;padding:0;margin:20px 0}
+  .service-details li{color:var(--silver);font-size:.9rem;line-height:1.65}.service-details li::before{content:'✓';color:var(--gold);margin-left:8px}
+  .service-details .detail-cta{display:inline-flex;margin-top:8px;padding:13px 21px;border-radius:12px;background:var(--gold);color:#07100c;font-weight:800}
+  @media(max-width:480px){.service-details ul{grid-template-columns:1fr}.service-details{padding:38px 18px}}
 
   .rv{opacity:0;transform:translateY(18px);animation:in .7s cubic-bezier(.2,.7,.3,1) forwards}
   .rv-d1{animation-delay:.08s}.rv-d2{animation-delay:.16s}.rv-d3{animation-delay:.24s}.rv-d4{animation-delay:.32s}
@@ -229,6 +237,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="foot rv rv-d4">كراج الأزهران — الشارقة، المنطقة الصناعية 4 &nbsp;|&nbsp; <bdi>+971 55 869 8543</bdi></p>
 
 </main>
+
+<section class="service-details" aria-labelledby="bentley-details-title">
+  <div class="service-details-inner">
+    <h2 id="bentley-details-title">كراج تصليح بنتلي في الشارقة — صيانة بنتلي للموديلات الفاخرة</h2>
+    <p>كراج الأزهران ورشة مستقلة لتصليح وصيانة بنتلي في الشارقة. نبدأ بفحص كمبيوتر وتشخيص واضح ثم نشرح العمل المقترح والتكلفة قبل بدء الإصلاح. نخدم كونتيننتال GT وبنتايجا وفلاينج سبير ومولسان مع استلام وتسليم من دبي عند الحاجة.</p>
+    <ul>
+      <li>فحص كمبيوتر وبرمجة بنتلي</li>
+      <li>تصليح مكينة وجير بنتلي</li>
+      <li>كهرباء وتكييف وفرامل</li>
+      <li>صيانة دورية وفحص قبل الشراء</li>
+    </ul>
+    <p>للحجز، أرسل موديل بنتلي والسنة ووصف العطل عبر واتساب أو اتصل بنا مباشرة. نحن مركز مستقل ولسنا وكيلاً رسمياً لبنتلي.</p>
+    <a class="detail-cta" href="https://wa.me/971558698543?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%81%D8%AD%D8%B5%20%D9%84%D8%A8%D9%86%D8%AA%D9%84%D9%8A" target="_blank" rel="noopener">اطلب فحص بنتلي عبر واتساب</a>
+  </div>
+</section>
 
 <!-- DKI — إدراج الكلمة المفتاحية ديناميكياً في العنوان -->
 <script>
