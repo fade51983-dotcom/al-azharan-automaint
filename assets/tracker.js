@@ -25,7 +25,7 @@
   });
 
   // ValueTrack (من إعلانات Google إذا أضيفت)
-  ['campaign_id','ad_group_id','keyword','creative','match_type','network','device'].forEach(function(k){
+  ['campaign_id','ad_group_id','keyword','kw','creative','match_type','network','device'].forEach(function(k){
     var v = p.get(k);
     if (v) data.push(k + '=' + encodeURIComponent(v));
   });

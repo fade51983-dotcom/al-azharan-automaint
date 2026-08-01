@@ -24,6 +24,50 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
+function decodeValue(value) {
+  let decoded = String(value || '').replace(/\+/g, ' ');
+  try { decoded = decodeURIComponent(decoded); } catch {}
+  return decoded;
+}
+
+function getPageDetails(value) {
+  const raw = decodeValue(value || '/');
+  try {
+    const pageUrl = new URL(raw, 'https://www.al-azharan-auto-maint.com');
+    const path = pageUrl.pathname.replace(/\/$/, '') || '/';
+    const names = {
+      '/': 'الرئيسية',
+      '/porsche': 'بورش',
+      '/audi': 'أودي',
+      '/bentley': 'بنتلي',
+      '/call': 'اتصل بنا',
+    };
+    return {
+      name: names[path.toLowerCase()] || path,
+      keyword: decodeValue(pageUrl.searchParams.get('kw') || pageUrl.searchParams.get('keyword') || pageUrl.searchParams.get('utm_term') || ''),
+    };
+  } catch {
+    return { name: raw.slice(0, 80), keyword: '' };
+  }
+}
+
+function formatLocation(city, country) {
+  const cityName = decodeValue(city);
+  const localizedCities = {
+    'Abu Dhabi': 'أبوظبي', Dubai: 'دبي', Sharjah: 'الشارقة', Ajman: 'عجمان',
+    'Ras Al Khaimah': 'رأس الخيمة', Fujairah: 'الفجيرة', 'Umm Al Quwain': 'أم القيوين',
+  };
+  const localizedCountries = { AE: 'الإمارات' };
+  return [localizedCities[cityName] || cityName, localizedCountries[country] || decodeValue(country)]
+    .filter(Boolean).join('، ') || 'غير متاح';
+}
+
+function formatUaeTime() {
+  return new Intl.DateTimeFormat('ar-AE', {
+    timeZone: 'Asia/Dubai', hour: 'numeric', minute: '2-digit', hour12: true,
+  }).format(new Date());
+}
+
 function extractAttribution(url) {
   const a = {};
   const p = url.searchParams;
@@ -42,6 +86,9 @@ function extractAttribution(url) {
   if (p.get('network')) a.network = p.get('network');
   if (p.get('device')) a.device = p.get('device');
   if (p.get('label')) a.label = p.get('label');
+  if (p.get('ev')) a.ev = p.get('ev');
+  if (p.get('kw')) a.kw = p.get('kw');
+  if (p.get('search_keyword')) a.search_keyword = p.get('search_keyword');
   extractReferrer(a, p);
   return a;
 }
@@ -62,9 +109,9 @@ function detectDevice(ua) {
   const l = ua.toLowerCase();
   const mobile = /mobile|iphone|ipad|android.*mobile|blackberry/i.test(l);
   const tablet = /ipad|android(?!.*mobile)|tablet/i.test(l);
-  if (tablet) return '📱 Tablet';
-  if (mobile) return '📱 هاتف';
-  return '💻 حاسوب';
+  if (tablet) return 'Tablet';
+  if (mobile) return 'هاتف';
+  return 'حاسوب';
 }
 
 function detectOS(ua) {
@@ -86,7 +133,7 @@ function detectBrowser(ua) {
   return '';
 }
 
-function getLeadScore(a) {
+function getLeadScore(a, event) {
   let s = 0;
   if (a.gclid) s += 30;
   if (a.fbclid) s += 25;
@@ -94,7 +141,22 @@ function getLeadScore(a) {
   if (a.utm_term) s += 10;
   if (a.keyword) s += 15;
   if (a.search_keyword) s += 5;
+  if (event === 'call' || event === 'whatsapp') s += 30;
   return Math.min(100, s);
+}
+
+function getScoreLabel(score, event) {
+  if (event === 'call' || event === 'whatsapp') return score >= 70 ? 'عميل محتمل قوي 🔥' : 'تفاعل مهم ✅';
+  if (score >= 70) return 'عميل محتمل قوي 🔥';
+  if (score >= 40) return 'مهتم';
+  if (score > 0) return 'اهتمام أولي';
+  return 'زيارة بدون بيانات إعلانية';
+}
+
+function getEventTitle(event) {
+  if (event === 'call') return '📞 ضغط زر الاتصال — الأزهران';
+  if (event === 'whatsapp') return '💬 ضغط واتساب — الأزهران';
+  return '🟢 زيارة جديدة — الأزهران';
 }
 
 function getLabel(a) {
@@ -208,70 +270,51 @@ export default async function handler(req) {
   const urlAttribution = extractAttribution(url);
   attribution = { ...urlAttribution, ...attribution };
   attribution.page = attribution.page || url.searchParams.get('page') || referrer.replace(/https?:\/\/[^\/]+/, '') || '/';
+  try {
+    const pageAttribution = extractAttribution(new URL(attribution.page, 'https://www.al-azharan-auto-maint.com'));
+    attribution = { ...pageAttribution, ...attribution };
+  } catch {}
 
   // IP enrichment via Vercel
   const city = req.headers.get('x-vercel-ip-city') || '';
-  const region = req.headers.get('x-vercel-ip-country-region') || '';
   const country = req.headers.get('x-vercel-ip-country') || '';
-  const lat = req.headers.get('x-vercel-ip-latitude') || '';
-  const lon = req.headers.get('x-vercel-ip-longitude') || '';
   const asn = req.headers.get('x-vercel-ip-as-number') || '';
   const provider = req.headers.get('x-vercel-ip-as-name') || '';
 
-  const location = [city, region, country].filter(Boolean).join('، ') || 'غير متاح';
-  const coords = (lat && lon) ? `${lat}, ${lon}` : null;
+  const location = formatLocation(city, country);
   const network = provider ? `${escapeHtml(provider)} (<code>${escapeHtml(asn)}</code>)` : (asn ? `<code>${escapeHtml(asn)}</code>` : 'غير متاح');
 
   // Lead score
-  const score = getLeadScore(attribution);
+  const event = attribution.ev || 'pageview';
+  const score = getLeadScore(attribution, event);
   const label = getLabel(attribution);
 
-  // Build message
-  const time = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' +04';
-  const pagePath = typeof attribution.page === 'string' ? attribution.page.slice(0, 100) : '/';
+  // Build concise Arabic message
+  const time = formatUaeTime();
+  const page = getPageDetails(attribution.page);
+  const keyword = decodeValue(attribution.keyword || attribution.kw || attribution.search_keyword || page.keyword);
 
-  // Attribution lines
-  const attrLines = [];
-  if (attribution.gclid) {
-    attrLines.push(`<b>GCLID:</b> ✅ ← إعلان Google`);
-    attrLines.push(`<code>${escapeHtml(attribution.gclid.slice(0, 30))}...</code>`);
-  }
-  if (attribution.fbclid) {
-    attrLines.push(`<b>FBCLID:</b> ✅ ← إعلان فيسبوك`);
-  }
-  if (attribution.utm_source || attribution.utm_campaign) {
-    const utm = [attribution.utm_source, attribution.utm_medium, attribution.utm_campaign].filter(Boolean).join(' / ');
-    attrLines.push(`<b>UTM:</b> ${escapeHtml(utm)}`);
-  }
-  if (attribution.campaign_id) {
-    attrLines.push(`<b>معرّف الحملة:</b> <code>${escapeHtml(attribution.campaign_id)}</code>`);
-  }
-  if (attribution.keyword) {
-    attrLines.push(`<b>الكلمة:</b> ${escapeHtml(attribution.keyword)}`);
-  }
-  if (attribution.search_keyword) {
-    attrLines.push(`<b>بحث:</b> ${escapeHtml(attribution.search_keyword)}`);
-  }
-  if (attribution.match_type) {
-    attrLines.push(`<b>تطابق:</b> ${escapeHtml(attribution.match_type)}`);
-  }
+  const adLines = [];
+  if (attribution.gclid) adLines.push(`<b>Google Ads:</b> ✅`);
+  if (attribution.fbclid) adLines.push(`<b>Facebook Ads:</b> ✅`);
+  if (attribution.campaign_id) adLines.push(`<b>الحملة:</b> <code>${escapeHtml(attribution.campaign_id)}</code>`);
+  if (attribution.match_type) adLines.push(`<b>التطابق:</b> ${escapeHtml(attribution.match_type)}`);
 
   const msg = [
-    `<b>🟢 الأزهران — زيارة جديدة</b>`,
+    `<b>${getEventTitle(event)}</b>`,
+    ``,
     `🕐 ${time}`,
-    `<b>الصفحة:</b> <code>${escapeHtml(pagePath)}</code>`,
-    ``,
-    ...(attrLines.length ? [`<b>📢 مصدر الزيارة:</b>`, ...attrLines, ``] : []),
-    `<b>التصنيف:</b> ${label}`,
-    `<b>التقييم:</b> ${score}/100${score >= 70 ? ' — عميل محتمل قوي' : score >= 40 ? ' — مهتم' : ''}`,
-    ``,
+    `<b>📄 الصفحة:</b> ${escapeHtml(page.name)}`,
+    keyword ? `<b>🔎 الكلمة:</b> ${escapeHtml(keyword)}` : null,
     `<b>📍 الموقع:</b> ${escapeHtml(location)}`,
-    coords ? `<b>🗺️ الإحداثيات:</b> <code>${escapeHtml(coords)}</code>` : '',
-    `<b>الجهاز:</b> ${detectDevice(ua)} ${detectOS(ua)} ${detectBrowser(ua)}`,
+    `<b>📱 الجهاز:</b> ${detectDevice(ua)} • ${detectOS(ua)} • ${detectBrowser(ua)}`,
+    `<b>🚦 المصدر:</b> ${label}`,
+    `<b>⭐ الجودة:</b> ${score}/100 — ${getScoreLabel(score, event)}`,
     ``,
+    ...(adLines.length ? [`<b>تفاصيل الإعلان:</b>`, ...adLines, ``] : []),
     `<b>🌐 IP:</b> <code>${escapeHtml(ip)}</code>`,
     `<b>🏢 الشبكة:</b> ${network}`,
-  ].filter(Boolean).join('\n');
+  ].filter(line => line !== null && line !== undefined).join('\n');
 
   // Send notification
   await sendTelegram(process.env.TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_CHAT_ID, msg);
