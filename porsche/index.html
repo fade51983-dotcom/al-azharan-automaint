@@ -171,7 +171,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .service-details p{color:var(--muted);line-height:2;font-size:.96rem;margin-bottom:16px}
   .service-details ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;list-style:none;padding:0;margin:20px 0}
   .service-details li{color:var(--silver);font-size:.9rem;line-height:1.65}.service-details li::before{content:'✓';color:var(--red-hot);margin-left:8px}
+  .intent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}
+  .intent-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .intent-card h3{font-family:var(--font-display);font-size:1rem;line-height:1.6;margin-bottom:7px;color:#fff}
+  .intent-card p{font-size:.84rem;line-height:1.85;margin:0}
+  .service-faq{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+  .service-faq h3{font-family:var(--font-display);font-size:1.12rem;margin-bottom:14px}
+  .service-faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:9px}
+  .service-faq summary{cursor:pointer;color:var(--silver);font-weight:600}
+  .service-faq details p{margin:10px 0 0;font-size:.86rem}
   .service-details .detail-cta{display:inline-flex;margin-top:8px;padding:13px 21px;border-radius:12px;background:var(--red);color:#fff;font-weight:800}
+  @media(max-width:640px){.intent-grid{grid-template-columns:1fr}}
   @media(max-width:480px){.service-details ul{grid-template-columns:1fr}.service-details{padding:38px 18px}}
 
   .rv{opacity:0;transform:translateY(18px);animation:in .7s cubic-bezier(.2,.7,.3,1) forwards}
@@ -249,6 +259,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>كهرباء وتكييف وفرامل</li>
       <li>صيانة دورية وفحص قبل الشراء</li>
     </ul>
+    <div class="intent-grid" aria-label="خدمات بورش حسب نوع الطلب">
+      <article class="intent-card">
+        <h3>كراج بورش في الشارقة</h3>
+        <p>ورشة مستقلة في المنطقة الصناعية 4 لفحص بورش وتشخيص الأعطال، مع استلام وتسليم من دبي عند الحاجة.</p>
+      </article>
+      <article class="intent-card">
+        <h3>صيانة بورش الدورية</h3>
+        <p>تغيير الزيوت والفلاتر، فحص الفرامل والتكييف والتعليق، وبرمجة تنبيهات الصيانة حسب موديل السيارة.</p>
+      </article>
+      <article class="intent-card">
+        <h3>تصليح بورش</h3>
+        <p>تشخيص أعطال المكينة والجير PDK والكهرباء والتبريد، ثم توضيح سبب العطل والتكلفة قبل بدء الإصلاح.</p>
+      </article>
+    </div>
+    <div class="service-faq">
+      <h3>أسئلة شائعة عن صيانة بورش</h3>
+      <details>
+        <summary>هل تخدمون سيارات بورش القادمة من دبي؟</summary>
+        <p>نعم، نخدم دبي والشارقة ويتوفر استلام وتسليم بالسطحة عند الحاجة بعد تنسيق الموعد.</p>
+      </details>
+      <details>
+        <summary>هل يتم الإصلاح قبل معرفة التكلفة؟</summary>
+        <p>لا. نبدأ بالفحص والتشخيص، ثم نشرح العمل المقترح والتكلفة وننتظر موافقتك قبل التنفيذ.</p>
+      </details>
+      <details>
+        <summary>ما موديلات بورش التي تستقبلونها؟</summary>
+        <p>كايين، باناميرا، ماكان، 911، كايمن وتايكان، إضافة إلى موديلات بورش الأخرى حسب نوع الخدمة.</p>
+      </details>
+    </div>
     <p>للحجز، أرسل موديل بورش والسنة ووصف العطل عبر واتساب أو اتصل بنا مباشرة. نحن مركز مستقل ولسنا وكيلاً رسمياً لبورش.</p>
     <a class="detail-cta" href="https://wa.me/971558698543?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%81%D8%AD%D8%B5%20%D9%84%D8%A8%D9%88%D8%B1%D8%B4" target="_blank" rel="noopener">اطلب فحص بورش عبر واتساب</a>
   </div>
