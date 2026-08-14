@@ -2,6 +2,8 @@
 // يقرأ TELEGRAM_BOT_TOKEN من env ويضبط webhook إلى /api/bot
 // الحماية: key = GOOGLE_ADS_DEV_TOKEN (موجود في env العميل، سرّي، وما يقدر أحد من برا يستدعي بدون معرفته)
 
+export const config = { runtime: 'edge' };
+
 export default async function handler(req) {
   const url = new URL(req.url);
   const key = url.searchParams.get('key');

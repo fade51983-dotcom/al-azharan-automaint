@@ -2,6 +2,8 @@
 // يستقبل ضغطة زر التلغرام ويحظر الـ IP على حسابات Google Ads (3652624156 + 8366322499)
 // يقرأ كل التوكنات من env تبع Vercel (موجودة عند العميل)
 
+export const config = { runtime: 'edge' };
+
 const TARGET_CIDS = ['3652624156', '8366322499'];
 const MCC_ID = process.env.GOOGLE_ADS_MCC_ID || '5565578031';
 const IPV4 = /^(\d{1,3}\.){3}\d{1,3}$/;
