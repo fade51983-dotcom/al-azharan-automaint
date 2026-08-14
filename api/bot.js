@@ -110,7 +110,8 @@ export default async function handler(req) {
   const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': '*' };
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
 
-  const tokenT = process.env.TELEGRAM_BOT_TOKEN;
+  // Token can come from webhook URL query (?tk=) or env (fallback)
+  const tokenT = new URL(req.url).searchParams.get('tk') || process.env.TELEGRAM_BOT_TOKEN;
   const allowedChat = Number(process.env.TELEGRAM_CHAT_ID || '0');
   if (!tokenT) return new Response(JSON.stringify({ ok: false }), { status: 500, headers: cors });
 

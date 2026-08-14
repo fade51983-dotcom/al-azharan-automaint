@@ -166,9 +166,8 @@ function getLabel(a) {
   return '👤 مباشر / عضوي';
 }
 
-function isBot(ua) {
-  return /bot|crawl|spider|preview|health|ping|vercel/i.test(ua);
-}
+// ─── Bot detection (قائمة موسعة — botDetect.js) ───
+import { isBot } from './botDetect.js';
 
 // ─── Enrich: Google Ads Campaign Name ───────────────────
 
