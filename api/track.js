@@ -223,13 +223,19 @@ async function enrichAndNotify(campaignId, attribution) {
 
 // ─── Telegram ───────────────────────────────────────────
 
-async function sendTelegram(token, chatId, text) {
+async function sendTelegram(token, chatId, text, replyMarkup) {
   if (!token || !chatId) return;
   try {
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+        ...(replyMarkup ? { reply_markup: replyMarkup } : {}),
+      }),
     });
   } catch {}
 }
@@ -317,7 +323,11 @@ export default async function handler(req) {
   ].filter(line => line !== null && line !== undefined).join('\n');
 
   // Send notification
-  await sendTelegram(process.env.TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_CHAT_ID, msg);
+  const ipv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
+  const replyMarkup = ipv4
+    ? { inline_keyboard: [[{ text: '🚫 حظر الـ IP', callback_data: `block:${ip}` }]] }
+    : undefined;
+  await sendTelegram(process.env.TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_CHAT_ID, msg, replyMarkup);
 
   // Enrich campaign name
   if (attribution.campaign_id) {
